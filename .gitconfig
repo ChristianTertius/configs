@@ -1,0 +1,6 @@
+[core]
+	autocrlf = input
+	editor = nvim
+[user]
+	email = ct160103@gmail.com
+	name = ChristianTertius
