@@ -1,3 +1,4 @@
+# zmodload zsh/zprof
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 # Path to your Oh My Zsh installation.
@@ -7,6 +8,10 @@ export PATH="$HOME/.config/composer/vendor/bin:$PATH"
 # load a random theme each time Oh My Zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
+#
+# Disable compinit bawaan OMZ karena sudah kita handle sendiri
+zstyle ':omz:plugins:nvm' lazy yes
+DISABLE_COMPFIX=true
 ZSH_THEME="robbyrussell"
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -69,7 +74,12 @@ ZSH_THEME="robbyrussell"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git z)
-
+autoload -Uz compinit
+if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C  # pakai cache, skip security check
+fi
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
@@ -102,9 +112,11 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias lo='du -sh && ls -lAh'
 alias d='docker'
-alias lsls='ls -ltr'
+alias lsls='eza -l -s=date --icons --total-size'
 alias php81='sudo update-alternatives --set php /usr/bin/php8.1'
 alias php82='sudo update-alternatives --set php /usr/bin/php8.2'
+alias php84='sudo update-alternatives --set php /usr/bin/php8.4'
+alias php85='sudo update-alternatives --set php /usr/bin/php8.5'
 o() {
     if [ $# -eq 0 ]; then
         # Jika tidak ada argumen, z ke nv lalu buka nvim di direktori saat ini
@@ -114,10 +126,33 @@ o() {
         z "$@" && nvim
     fi
 }
+
+tm() {
+  if [ $# -eq 0 ]; then
+    echo "tidak ada argument"
+  else
+    z "$@" && tmux
+  fi
+}
+
+tmn() {
+  if [ $# -eq 0 ]; then
+    echo "tidak ada argument"
+  else
+    z "$@" && tmux new-session env NVIM_APPNAME=nvim12 ~/.local/share/bob/v0.12.3/bin/nvim
+  fi
+}
+
 setopt NO_BEEP
 alias pa="php artisan"
 alias i="nvim"
+# alias t="tmux"
+alias v="nvim12"
+alias x="exit"
 alias ld="lazydocker"
+alias ll="eza -l --icons"
+alias la='ll -s=date'
+alias lg="lazygit"
 alias glt='git log --oneline --pretty=format:"%h %ad %s"'
 export PATH=$PATH:/usr/local/go/bin
 export GOPATH=$HOME/go
@@ -138,3 +173,11 @@ export PATH=$PATH:$GOPATH/bin
 # fi
 
 . "$HOME/.local/bin/env"
+
+# Added by flyctl installer
+export FLYCTL_INSTALL="/home/budi/.fly"
+export PATH="$FLYCTL_INSTALL/bin:$PATH"
+# zprof
+export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
+alias nvim12="NVIM_APPNAME=nvim12 ~/.local/share/bob/v0.12.3/bin/nvim"
+export PATH="$PATH:$HOME/.local/bin"
