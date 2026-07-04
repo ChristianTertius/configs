@@ -16,7 +16,7 @@ matches:
     replace: "Hi there!"
   - trigger: "ccn"
     replace: "Christian Carlos Tertius"
-  - trigger: "cce"
+  - trigger: ":email"
     replace: "christian160103@gmail.com"
   - trigger: ":nik"
     replace: "7171051601030001"
